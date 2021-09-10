@@ -1,0 +1,194 @@
+Routes For Role
+1-	POST Req: /addNewRole 		
+	Function
+	Add New Role
+	Condition 
+	(Only Accessable by Admin)
+
+2-	GET  Req: / 	       		
+	Function
+	Get All Roles
+	Condition 
+	(Only Accessable by Admin)
+
+3- 	GET  Req: /deleteRole/:roleId 
+	Function	
+	Delete Role
+	Params
+	Role Id	
+	Condition 
+	(Only Accessable by Admin)
+			
+4-	POST Req: /updateRole/:roleId	
+	Function	
+	Update Role
+	Params
+	Role Id	
+	Condition 
+	(Only Accessable by Admin)
+
+5-	GET  Req: /:roleId		
+	Function	
+	Get Single Role
+	Params
+	Role Id	
+	Condition 
+	(Only Accessable by Admin)
+
+---------------------------------------xxxxxxxxxxxxxxx------------------------------------------
+Routes For User
+
+1-	POST Req: /addNewUser/:roleId 		
+	Function
+	Add New User
+	Params
+	Role Id	
+	Condition 
+	(Only Accessable by Admin)
+	
+
+2-	GET Req: / 		
+	Function
+	Get All Users	
+	Condition 
+	(Only Accessable by Admin)
+	
+3-	GET Req: /deleteUser/:userId 		
+	Function
+	Delete User
+	Params
+	User Id	
+	Condition 
+	(Only Accessable by Admin)
+
+4-	POST Req: /updateUser/:userId 		
+	Function
+	Update User Information
+	Params
+	Role Id	
+	Condition 
+	(Accessable by Admin)
+
+5-	POST Req: /loginUser 		
+	Function
+	Login User
+	Condition 
+	(Accessable by Admin, Teacher, Student)
+
+---------------------------------------xxxxxxxxxxxxxxx------------------------------------------
+Routes For Courses
+
+1-	POST Req: /addNewCourse		
+	Function
+	Add New Course
+	Condition 
+	(Only Accessable by Admin)
+	
+
+2-	GET Req: / 		
+	Function
+	Get All Course
+	Condition 
+	(Only Accessable by Admin)
+	
+3-	GET Req: /courseId/:id		
+	Function
+	Delete Course
+	Params
+	Course Id
+	Condition 
+	(Only Accessable by Admin)
+
+4-	POST Req: /updateCourse/:id		
+	Function
+	Update Course Information
+	Params
+	Course Id	
+	Condition 
+	(Accessable by Admin)
+
+5- 	GET Req: /assignCourse/:teacherId/:courseId
+	Function
+	Assign Course to Teacher
+	Params
+	Teacher_id, Course_Id	
+	Condition 
+	(Accessable by Admin)
+
+6- 	GET Req: /enrollStudent/:stuId/:courseId
+	Function
+	Enroll Students
+	Params
+	stuId, course_id	
+	Condition 
+	(Accessable by Admin)
+
+7-	POST Req: /changeCourseStatus/:id
+	Function
+	Change Course Status to active and set time limit as well as seat limit
+	Params
+	course_id	
+	Condition 
+	(Accessable by Admin)
+
+---------------------------------------xxxxxxxxxxxxxxx------------------------------------------
+Routes For Teachers 
+1-	POST Req: /updateTheirProfile/:id
+	Function
+	Update their profile
+	Params
+	Teacher_id	
+	Condition 
+	(Accessable by Admin, teacher)
+
+2-	GET Req: /listOfStudent/:id
+	Function
+	Get The list of assign Student
+	Params
+	Teacher_id	
+	Condition 
+	(Accessable by teacher)
+
+3-	GET Req: /listOfCourses/:id
+	Function
+	Get The list of assign Course
+	Params
+	Teacher_id	
+	Condition 
+	(Accessable by teacher)
+
+
+---------------------------------------xxxxxxxxxxxxxxx------------------------------------------
+Routes For Student
+1-	POST Req: /updateTheirProfile/:id
+	Function
+	Update their profile
+	Params
+	studentId
+	Condition 
+	(Accessable by Admin, student)
+
+2-	GET Req: enrolledInCourse/:stuId/:courseId
+	Function
+	Enrolled Themseleves in multiple courses 
+	Params
+	studentId and courseId	
+	Condition 
+	(Accessable by student)
+
+3-	GET Req: /listOfCourses/:id
+	Function
+	Get The list of enrolled Course
+	Params
+	studentId
+	Condition 
+	(Accessable by student)
+
+4-	GET Req: /getAvaiableCourses
+	Function
+	Get The list of avaible courses with number of seats 	
+	Params
+	studentId
+	Condition 
+	(Accessable by admin, student)
+
