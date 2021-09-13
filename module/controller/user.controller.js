@@ -5,7 +5,8 @@ dotenv.config();
 const { updateInformation } = require("../../models/modelFunc/teacher.func");
 const { updateStuInformation } = require("../../models/modelFunc/student.func");
 const { roleByName } = require("../../models/modelFunc/role.func");
-
+const generator = require("generate-password");
+const { passwordMail } = require("../../module/nodemailer/passwordMail");
 /**
  * Add User
  */
@@ -15,7 +16,7 @@ module.exports.addUser = (req, res) => {
     userModel
       .addUser(userData)
       .then((succ) => {
-        res.send({ status: true, save: true, userInfo: succ });
+        res.send({ status: true, userInfo: succ });
       })
       .catch((err) => {
         res.send({
@@ -56,6 +57,7 @@ module.exports.allUsers = async (req, res) => {
   }
   try {
     let users = await userModel.allUsers(limit, page, sortingTechnique);
+
     res.send({ status: true, found: users });
   } catch (error) {
     res.send({ status: false, err: error });
@@ -130,12 +132,14 @@ module.exports.loginUser = (req, res) => {
           expiresIn: "1440m",
         });
         res.send({ status: true, token: token, role: succ.Role.name });
+        return
       }
       res.send({
         status: false,
         role: "undefined",
         roleErrorMsg: "Something went wrong with the role please try again",
       });
+      return
     })
     .catch((err) => {
       res.send({
@@ -144,6 +148,7 @@ module.exports.loginUser = (req, res) => {
         errorMsg: "User Not Found Try Again later",
       });
     });
+    return
 };
 
 module.exports.teachers = async (req, res) => {
