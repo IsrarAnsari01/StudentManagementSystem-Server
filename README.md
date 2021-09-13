@@ -37,6 +37,7 @@
   - Filter Out treachers according to their intrested Subjects
 ### Feature
 * Authorization In APIs
+* When Student Add in our portal he/she will receive a mail which contain his/her password
 * Form validation
 * JWT Token for Authentication
 * Pagination and Sorting 
