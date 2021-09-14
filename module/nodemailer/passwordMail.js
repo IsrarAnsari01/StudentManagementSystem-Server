@@ -1,23 +1,6 @@
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
-  //   service: "gmail",
-  //   auth: {
-  //     user: "israr46ansari@gmail.com",
-  //     pass: "########",
-  //   },
-  //   pool: true,
-  pool: true,
-  host: "mail.codup.io",
-  port: 465,
-  secure: true, // true for 465 port false for other port
-  auth: {
-    user: "noreply@codup.io",
-    pass: "click@12345",
-  },
-  //   tls: {
-  //     // do not fail on invalid certs
-  //     rejectUnauthorized: false,
-  //   },
+
 });
 
 module.exports.passwordMail = function (userEmail, password) {
