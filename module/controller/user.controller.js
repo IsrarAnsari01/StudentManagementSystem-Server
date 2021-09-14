@@ -6,7 +6,8 @@ const { updateInformation } = require("../../models/modelFunc/teacher.func");
 const { updateStuInformation } = require("../../models/modelFunc/student.func");
 const { roleByName } = require("../../models/modelFunc/role.func");
 const generator = require("generate-password");
-const { passwordMail } = require("../../module/nodemailer/passwordMail");
+const mail = require("../nodemailer/email");
+
 /**
  * Add User
  */
@@ -100,7 +101,6 @@ module.exports.updateUserInfo = async (req, res) => {
         );
         break;
       case userRole == req.userRole && req.userRole == "Student":
-        console.log("Inside Stu");
         advanceUpdate = await updateStuInformation(
           userMetaData,
           req.params.userId
@@ -165,5 +165,80 @@ module.exports.teacher = async (req, res) => {
     res.send({ status: true, teacher: teacher });
   } catch (error) {
     res.status(400).send({ status: false, err: error });
+  }
+};
+
+/**
+ * Reset Password
+ * @param {string email} req
+ * @param {status boolean , string massage} res
+ * @returns
+ */
+
+module.exports.resetPassword = async (req, res) => {
+  try {
+    const userEmail = req.body.email;
+    const user = await userModel.getUserbyEmail(userEmail);
+    let password = generator.generate({
+      length: 10,
+      numbers: true,
+      uppercase: false,
+    });
+    password = password + "!";
+    const userId = user.id;
+    const token = jwt.sign({ id: userId }, process.env.RESET_SECRET_KEY, {
+      expiresIn: "20m",
+    });
+    let userInfo = { password: token };
+    const updateUserPassword = await userModel.updateUser(userInfo, user.id);
+    let sendMail = await mail.passwordMail(user.email, token);
+    res.send({ status: true, success: "Mail Send Successfully" });
+  } catch (err) {
+    res.send({
+      status: false,
+      err: "Something went wrong Try Again Or Sign in Again",
+    });
+  }
+  return;
+};
+
+/**
+ * Generate New Password | First check send token is valid or not then generate password
+ * @param {base64 token , string newPassword} req
+ * @param {status boolean , string massage} res
+ * @returns
+ */
+
+module.exports.generatePassword = async (req, res) => {
+  let token = req.body.token;
+  let newPassword = req.body.newPassword;
+  let userId;
+  if (token) {
+    jwt.verify(token, process.env.RESET_SECRET_KEY, (err, succ) => {
+      if (err) {
+        res.send({
+          status: false,
+          err: "Invalid Token | Maybe token expired",
+        });
+        return;
+      }
+      userId = succ.id;
+    });
+    if (userId) {
+      try {
+        let data = { password: newPassword };
+        const updatePassword = await userModel.updateUser(data, userId);
+        res.send({ status: true, succMsg: "Password Changed Successfully " });
+        return;
+      } catch (error) {
+        res.send({
+          status: false,
+          succMsg: "Something went wrong in changing password",
+        });
+      }
+      return;
+    }
+    res.send({ status: false, err: "Unable to find User Please Sign in" });
+    return;
   }
 };

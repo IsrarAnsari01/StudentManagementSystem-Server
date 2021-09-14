@@ -51,4 +51,14 @@ router.put(
   controller.updateUserInfo
 );
 
+/**
+ * Reset Password
+ */
+router.post("/resetpassword", controller.resetPassword);
+
+/**
+ * Generate New Password
+ */
+router.post("/createPassword", controller.generatePassword);
+
 module.exports = router;

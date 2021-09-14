@@ -162,3 +162,18 @@ module.exports.teacher = async (id) => {
   }
   return teacher;
 };
+
+module.exports.getUserbyEmail = async (email) => {
+  try {
+    var user = await db.User.findOne({
+      where: {
+        email: email,
+      },
+      include: db.Role,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return user;
+};
+
