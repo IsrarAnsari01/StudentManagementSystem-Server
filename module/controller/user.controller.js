@@ -116,39 +116,27 @@ module.exports.updateUserInfo = async (req, res) => {
 /**
  * Login User
  */
-module.exports.loginUser = (req, res) => {
+module.exports.loginUser = async (req, res) => {
   const userData = req.body.userData;
   console.log(userData);
   if (userData.password.length < 6) {
     res.send({ status: false, Password: "Password Length too short" });
   }
-  userModel
-    .loginUser(userData)
-    .then((succ) => {
-      if (succ.Role.name == userData.role) {
-        const user = succ;
-        const userId = user.id;
-        const token = jwt.sign({ id: userId }, process.env.TOKEN_SECRET_KEY, {
-          expiresIn: "1440m",
-        });
-        res.send({ status: true, token: token, role: succ.Role.name });
-        return
-      }
-      res.send({
-        status: false,
-        role: "undefined",
-        roleErrorMsg: "Something went wrong with the role please try again",
-      });
-      return
-    })
-    .catch((err) => {
-      res.send({
-        status: false,
-        err: err,
-        errorMsg: "User Not Found Try Again later",
-      });
+  try {
+    const loggedUser = await userModel.loginUser(userData);
+    const userId = loggedUser.id;
+    const token = jwt.sign({ id: userId }, process.env.TOKEN_SECRET_KEY, {
+      expiresIn: "1440m",
     });
-    return
+    res.send({ status: true, token: token, role: loggedUser.Role.name });
+  } catch (error) {
+    res.send({
+      status: false,
+      err: error,
+      errorMsg: "User Not Found Try Again later",
+    });
+  }
+  return;
 };
 
 module.exports.teachers = async (req, res) => {
