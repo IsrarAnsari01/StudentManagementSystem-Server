@@ -1,6 +1,6 @@
-let ejs = require("ejs");
 let nodemailer = require("nodemailer");
-const fs = require("fs");
+let fs = require("fs");
+let ejs = require("ejs");
 
 const transporter = nodemailer.createTransport({
   host: "manta.websitewelcome.com",
@@ -16,34 +16,20 @@ const transporter = nodemailer.createTransport({
 });
 
 module.exports.passwordMail = function (userEmail, token) {
-  var data = fs.readFile('test.txt', 'utf8');
-  console.log(data.toString());  
-  // let filename = "resetPassword";
-  // let content = fs.readFileSync(process.cwd() + "/" + filename).toString();
-  // console.log(content);
-  // try {
-  //   const data = fs.readFileSync("./test.txt", "utf8");
-  //   console.log(data);
-  // } catch (err) {
-  //   console.error(err);
-  // }
-
-  // const content = readFile("resetPassword");
-  // html = ejs.renderFile("resetPassword", { token: token }, function (err, str) {
-  //   console.log(str);
-  // });
-  // let template = ejs.compile("resetPassword", options);
-  // console.log(template(data));
+  let source = fs
+    .readFileSync(`${__dirname}/templates/resetPassword.ejs`, "utf-8")
+    .toString();
+  let template = ejs.compile(source);
+  let html = template({ token: token });
   const mainOption = {
     from: "testing@codup.io",
     to: `${userEmail}`,
-    subject: `Test Mail`,
-    html: `Hello world`,
+    subject: `Click this link to change the password`,
+    html: `${html}`,
   };
   return new Promise((resolve, reject) => {
+    console.log(mainOption);
     transporter.sendMail(mainOption, (err, info) => {
-      console.log("mail option", mainOption);
-      console.log("success Msg", info);
       if (err) {
         console.log("Error in sending Mail ", err);
         reject(err);
