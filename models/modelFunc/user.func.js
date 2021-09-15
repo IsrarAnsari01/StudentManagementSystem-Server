@@ -169,11 +169,9 @@ module.exports.getUserbyEmail = async (email) => {
       where: {
         email: email,
       },
-      include: db.Role,
     });
   } catch (err) {
     console.log(err);
   }
   return user;
 };
-

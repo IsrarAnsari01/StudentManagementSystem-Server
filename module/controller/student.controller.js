@@ -14,7 +14,15 @@ module.exports.addInformation = async (req, res) => {
     let studentMetaInformation = await studentMetaModel.addInformation(
       studentInformation
     );
-    res.send({ status: true, save: true, studentInfo: studentMetaInformation });
+    if (studentMetaInformation) {
+      res.send({
+        status: true,
+        save: true,
+        studentMetaInformation: studentMetaInformation,
+      });
+      return;
+    }
+    res.send({ status: false, err: "Something went wrong in saving data" });
   } catch (error) {
     res.send({ status: false, err: error });
   }

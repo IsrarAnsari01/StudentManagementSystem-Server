@@ -5,7 +5,6 @@ dotenv.config();
 const { updateInformation } = require("../../models/modelFunc/teacher.func");
 const { updateStuInformation } = require("../../models/modelFunc/student.func");
 const { roleByName } = require("../../models/modelFunc/role.func");
-const generator = require("generate-password");
 const mail = require("../nodemailer/email");
 
 /**
@@ -128,7 +127,7 @@ module.exports.loginUser = async (req, res) => {
     const token = jwt.sign({ id: userId }, process.env.TOKEN_SECRET_KEY, {
       expiresIn: "1440m",
     });
-    res.send({ status: true, token: token, role: loggedUser.Role.name });
+    res.send({ status: true, token: token, role: loggedUser.Role.name, id: userId });
   } catch (error) {
     res.send({
       status: false,
@@ -179,12 +178,6 @@ module.exports.resetPassword = async (req, res) => {
   try {
     const userEmail = req.body.email;
     const user = await userModel.getUserbyEmail(userEmail);
-    let password = generator.generate({
-      length: 10,
-      numbers: true,
-      uppercase: false,
-    });
-    password = password + "!";
     const userId = user.id;
     const token = jwt.sign({ id: userId }, process.env.RESET_SECRET_KEY, {
       expiresIn: "20m",
