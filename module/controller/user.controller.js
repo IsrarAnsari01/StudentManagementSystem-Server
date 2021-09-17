@@ -127,7 +127,12 @@ module.exports.loginUser = async (req, res) => {
     const token = jwt.sign({ id: userId }, process.env.TOKEN_SECRET_KEY, {
       expiresIn: "1440m",
     });
-    res.send({ status: true, token: token, role: loggedUser.Role.name, id: userId });
+    res.send({
+      status: true,
+      token: token,
+      role: loggedUser.Role.name,
+      id: userId,
+    });
   } catch (error) {
     res.send({
       status: false,
@@ -183,7 +188,6 @@ module.exports.resetPassword = async (req, res) => {
       expiresIn: "20m",
     });
     let userInfo = { password: token };
-    const updateUserPassword = await userModel.updateUser(userInfo, user.id);
     let sendMail = await mail.passwordMail(user.email, token);
     res.send({ status: true, success: "Mail Send Successfully" });
   } catch (err) {
@@ -203,15 +207,16 @@ module.exports.resetPassword = async (req, res) => {
  */
 
 module.exports.generatePassword = async (req, res) => {
-  let token = req.body.token;
-  let newPassword = req.body.newPassword;
+  let userObj = req.body.userObj;
+  let token = userObj.token;
+  let newPassword = userObj.newPassword;
   let userId;
   if (token) {
     jwt.verify(token, process.env.RESET_SECRET_KEY, (err, succ) => {
       if (err) {
         res.send({
           status: false,
-          err: "Invalid Token | Maybe token expired",
+          err: "Invalid Token | Maybe token expired | Go back and generate new Password",
         });
         return;
       }
