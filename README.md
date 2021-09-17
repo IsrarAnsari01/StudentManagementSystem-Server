@@ -41,6 +41,7 @@
 * Form validation
 * JWT Token for Authentication
 * Pagination and Sorting 
+* User can reset his/her password if he/she forget it
 ### Tools
 * express js
 * jsonwebtoken
