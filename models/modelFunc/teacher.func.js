@@ -131,6 +131,12 @@ module.exports.assignedCourses = async (id) => {
         {
           model: db.Course,
           as: "course",
+          include: [
+            {
+              model: db.CourseRegistration,
+              as: "courseDetails",
+            },
+          ],
         },
         {
           model: db.User,
@@ -203,4 +209,24 @@ module.exports.enrolledStudents = async (id) => {
     console.log(err);
   }
   return Teacher;
+};
+
+module.exports.getAllTeachers = async () => {
+  try {
+    var teacher = db.Teachers.findAll();
+  } catch (error) {
+    console.log(teacher);
+  }
+  return teacher;
+};
+
+module.exports.findOneThroughMetaId = async (id) => {
+  try {
+    var findUser = await db.Teachers.findOne({
+      where: {
+        id: id,
+      },
+      include: db.User,
+    });
+  } catch (error) {}
 };

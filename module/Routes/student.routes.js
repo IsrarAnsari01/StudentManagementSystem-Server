@@ -26,12 +26,9 @@ router.post(
  * Only Accessable by ADMIN
  */
 
-router.get(
-  "/all",
-  grantAccess(["admin"]),
-  controller.studentsMetaInformation
-);
+router.get("/all", grantAccess(["admin"]), controller.studentsMetaInformation);
 
+router.get("/allstudents", grantAccess(["admin"]), controller.getAllStudents);
 /**
  * Delete Student Meta Information
  * User id pass as a URL parameter

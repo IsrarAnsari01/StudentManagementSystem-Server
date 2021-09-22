@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = new Sequelize("studentmanagementsystem", "root", "", {
   host: "localhost",
   dialect: "mysql",
-  logging: false,
+  logging: false
 });
 const db = {};
 

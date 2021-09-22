@@ -3,18 +3,36 @@ const {
   singleRegistration,
 } = require("../../models/modelFunc/courseRegistration.func");
 
+const { addExpertise } = require("../../models/modelFunc/expertises.func");
+
 /**
- * Add Meta Information
+ * Add Meta Information also all teacher experties
  * Teacher information should be pass as a object named as teacherMetaData
+ * Teacher skills should be pass as a array named as skills
  */
 
 module.exports.addInformation = async (req, res) => {
   try {
     let teacherMetaData = req.body.teacherMetaData;
+    let teacherSkills = req.body.skills;
     teacherMetaData.joinDate = new Date();
     let information = await teacherMetaModel.addInformation(teacherMetaData);
     if (information) {
-      res.send({ status: true, save: true, teacherInfo: information });
+      let data = { name: teacherSkills, teacher_id: information.id };
+      let addSkills = await addExpertise(data);
+      if (addSkills.status === "present") {
+        res.send({
+          status: false,
+          repeatationErr: `${addSkills.skillName} already added you as your skills`,
+        });
+        return;
+      }
+      res.send({
+        status: true,
+        save: true,
+        teacherInfo: information,
+        addedSkills: addSkills,
+      });
       return;
     }
     res.send({ status: false, err: "Something went wrong in saving data" });
@@ -223,4 +241,13 @@ module.exports.enrolledStudents = async (req, res) => {
     res.send({ status: false, err: error });
   }
   return;
+};
+
+module.exports.getAllTeachers = async (req, res) => {
+  try {
+    const teachers = await teacherMetaModel.getAllTeachers();
+    res.send({ teachers: teachers });
+  } catch (error) {
+    res.send({ err: "Something went wrong in fetching teachers" });
+  }
 };

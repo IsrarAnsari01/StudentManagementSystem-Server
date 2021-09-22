@@ -21,7 +21,6 @@ module.exports.addRole = async (roleData) => {
  * @returns Deleted Role
  */
 
-
 module.exports.deleteRole = async (roleId) => {
   try {
     var delRole = await db.Role.destroy({
@@ -56,7 +55,6 @@ module.exports.findRoles = async () => {
  * @returns updated Role
  */
 
-
 module.exports.updateRole = async (roleInfo, id) => {
   try {
     var updatedUser = await db.Role.update(roleInfo, {
@@ -76,12 +74,11 @@ module.exports.updateRole = async (roleInfo, id) => {
  * @returns role
  */
 
-
-module.exports.singleRole = async (roleId) => {
+module.exports.singleRole = async (name) => {
   try {
     var singleRole = await db.Role.findOne({
       where: {
-        id: roleId,
+        name: name,
       },
     });
   } catch (err) {
@@ -90,17 +87,13 @@ module.exports.singleRole = async (roleId) => {
   return singleRole;
 };
 
-
-
-
 /**
  * Return Single Role
  * @param string roleName
  * @returns role
  */
 
-
- module.exports.roleByName = async (roleName) => {
+module.exports.roleByName = async (roleName) => {
   try {
     var singleRole = await db.Role.findOne({
       where: {

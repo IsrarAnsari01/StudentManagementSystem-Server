@@ -3,18 +3,33 @@ const {
   singleRegistration,
 } = require("../../models/modelFunc/courseRegistration.func");
 
+const { addSubject } = require("../../models/modelFunc/intrestedSubjects.func");
 /**
- * Add Meta Information
+ * Add Meta Information also add student interested subjects
  * Student information should be pass as a object named as studentInformation
+ * Interested subjects should be passed as a array named as interestedSubjects
  */
 module.exports.addInformation = async (req, res) => {
   try {
     let studentInformation = req.body.studentInformation;
+    let interestedSubjects = req.body.interestedSubjects;
     studentInformation.joinDate = new Date();
     let studentMetaInformation = await studentMetaModel.addInformation(
       studentInformation
     );
     if (studentMetaInformation) {
+      let data = {
+        name: interestedSubjects,
+        student_id: studentMetaInformation.id,
+      };
+      let addInterestedSubjects = await addSubject(data);
+      if (addInterestedSubjects.status === "present") {
+        res.send({
+          status: false,
+          repeatationErr: `${addInterestedSubjects.subName} already added you as your Interested Subjects`,
+        });
+        return;
+      }
       res.send({
         status: true,
         save: true,
@@ -160,18 +175,21 @@ module.exports.assignCourse = async (req, res) => {
   const checkAlreadyApply = await alreadyAsssigned(studentid, courseid);
   if (!appilcable.courseStatus) {
     res.send({ status: false, statusError: "Course is inactive now" });
+    return
   }
   if (appilcable.registrationStatus) {
     res.send({
       status: false,
       registrationError: "Registration time is over now",
     });
+    return
   }
   if (checkAlreadyApply) {
     res.send({
       status: false,
       assignedErr: "You already Apply of this course ",
     });
+    return
   }
   try {
     let assignedCourse = await studentMetaModel.assignCourse(
@@ -198,4 +216,13 @@ module.exports.enrolledCourses = async (req, res) => {
     res.send({ status: false, err: error });
   }
   return;
+};
+
+module.exports.getAllStudents = async (req, res) => {
+  try {
+    let students = await studentMetaModel.getAllStudents();
+    res.send({ students: students });
+  } catch (error) {
+    res.send({ err: error });
+  }
 };

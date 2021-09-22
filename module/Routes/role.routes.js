@@ -17,7 +17,7 @@ router.get("/", controller.findRoles);
  * Accept Role id as a URL parameter | Only Admin access this API
  */
 
-router.get("/:roleId", grantAccess(["admin"]), controller.singleRole);
+router.get("/:roleName", controller.singleRole);
 
 /* Delete Role
  * Accept Role id as a URL parameter | Only Admin access this API

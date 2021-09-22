@@ -8,4 +8,6 @@ router.post("/add/:teacher_Id", grantAccess(["admin"]), controller.addExpertise)
 
 router.post("/", grantAccess(["admin"]), controller.getTeachers);
 
+router.get("/:id", grantAccess(["admin", "Teacher"]), controller.getTeacherSkills)
+
 module.exports = router;

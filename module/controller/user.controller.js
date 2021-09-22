@@ -5,8 +5,11 @@ dotenv.config();
 const { updateInformation } = require("../../models/modelFunc/teacher.func");
 const { updateStuInformation } = require("../../models/modelFunc/student.func");
 const { roleByName } = require("../../models/modelFunc/role.func");
+const { updateSkill } = require("../../models/modelFunc/expertises.func");
 const mail = require("../nodemailer/email");
-
+const {
+  updateSubjects,
+} = require("../../models/modelFunc/intrestedSubjects.func");
 /**
  * Add User
  */
@@ -93,22 +96,33 @@ module.exports.updateUserInfo = async (req, res) => {
     let basicUpdate = await userModel.updateUser(basicInfo, req.params.userId);
     let advanceUpdate;
     switch (true) {
-      case userRole == req.userRole && req.userRole == "Teacher":
+      case (userRole === req.userRole && userRole === "Teacher") ||
+        (req.userRole === "admin" && userRole === "Teacher"):
+        console.log("Inside Teacher Condition");
+        const updatedSkills = req.body.userData.skills;
+        const teacherId = req.body.userData.metaInformationId;
         advanceUpdate = await updateInformation(
           userMetaData,
           req.params.userId
         );
+        let data = { name: updatedSkills, teacher_id: teacherId };
+        let updateSkills = await updateSkill(data);
         break;
-      case userRole == req.userRole && req.userRole == "Student":
+      case (userRole === req.userRole && userRole === "Student") ||
+        (req.userRole === "admin" && userRole === "Student"):
+        let interestedSubjects = req.body.userData.interestedSubjects;
+        let studentId = req.body.userData.studentMetaInfoId;
+        let stuData = { name: interestedSubjects, student_id: studentId };
         advanceUpdate = await updateStuInformation(
           userMetaData,
           req.params.userId
         );
+        let updateInterestedSubjects = await updateSubjects(stuData);
         break;
     }
     res.send({ status: true, save: true, data: advanceUpdate });
   } catch (error) {
-    res.send({ status: false, err: error });
+    res.send({ status: false, err: "Something went wrong data not fetch yet" });
   }
 };
 
@@ -117,7 +131,6 @@ module.exports.updateUserInfo = async (req, res) => {
  */
 module.exports.loginUser = async (req, res) => {
   const userData = req.body.userData;
-  console.log(userData);
   if (userData.password.length < 6) {
     res.send({ status: false, Password: "Password Length too short" });
   }

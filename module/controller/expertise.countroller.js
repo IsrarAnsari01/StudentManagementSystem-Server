@@ -1,30 +1,25 @@
 const expertiseModel = require("../../models/modelFunc/expertises.func");
 
-const checkAlreadyAddOrNot = async (name, id) => {
-  let present = false;
-  try {
-    const check = await expertiseModel.check(name, id);
-    if (check) {
-      present = true;
-      return present;
-    }
-  } catch (error) {
-    console.error(error);
-  }
-  return present;
-};
+// const checkAlreadyAddOrNot = async (name, id) => {
+//   let present = false;
+//   try {
+//     const check = await expertiseModel.check(name, id);
+//     if (check) {
+//       present = true;
+//       return present;
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+//   return present;
+// };
 module.exports.addExpertise = async (req, res) => {
   try {
     let teacher_id = req.params.teacher_Id;
     let name = req.body.name;
     let data = { name, teacher_id };
-    if (!(name && teacher_id)) {
+    if (!(name.length && teacher_id)) {
       res.send({ status: false, err: "Something went wrong" });
-      return;
-    }
-    let alreadyAdd = await checkAlreadyAddOrNot(name, teacher_id);
-    if (alreadyAdd) {
-      res.send({ status: false, err: "You already add this Skill " });
       return;
     }
     let expertise = await expertiseModel.addExpertise(data);
@@ -47,4 +42,14 @@ module.exports.getTeachers = async (req, res) => {
     res.send({ status: false, found: null });
   }
   return;
+};
+
+module.exports.getTeacherSkills = async (req, res) => {
+  try {
+    let teacherId = req.params.id;
+    const getSkills = await expertiseModel.getSKills(teacherId);
+    res.send({ status: true, found: getSkills });
+  } catch (error) {
+    res.send({ status: false, err: "Unable to find skills of this teacher" });
+  }
 };

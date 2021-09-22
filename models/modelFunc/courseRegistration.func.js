@@ -125,9 +125,6 @@ module.exports.activeCourses = async () => {
  * @returns openCourse
  */
 module.exports.openCourse = async () => {
-  const todayDate = new Date(Date.now());
-  console.log(todayDate);
-  console.log(typeof todayDate);
   try {
     var openCourse = await db.CourseRegistration.findAll({
       where: {

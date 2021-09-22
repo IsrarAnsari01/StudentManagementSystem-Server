@@ -28,6 +28,7 @@ router.post(
  */
 
 router.get("/all", grantAccess(["admin"]), controller.teachersMetaInformation);
+router.get("/allteachers", grantAccess(["admin"]), controller.getAllTeachers);
 
 /**
  * Delete Teacher Meta Information

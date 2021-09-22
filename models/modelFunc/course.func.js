@@ -147,6 +147,10 @@ module.exports.assignedCourse = async (courseId) => {
             },
           ],
         },
+        {
+          model: db.CourseRegistration,
+          as: "courseDetails",
+        },
       ],
     });
   } catch (err) {
@@ -199,4 +203,13 @@ module.exports.courseStudent = async () => {
     console.log(err);
   }
   return courseStudent;
+};
+
+module.exports.genAllCourses = async () => {
+  try {
+    var courses = await db.Course.findAll();
+  } catch (error) {
+    console.log(error);
+  }
+  return courses;
 };

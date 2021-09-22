@@ -58,6 +58,7 @@ router.post("/addCourse", grantAccess(["admin"]), controller.addCourse);
  */
 
 router.get("/all", grantAccess(["admin"]), controller.courses);
+router.get("/", grantAccess(["admin"]), controller.getAllCourses);
 
 /*  * Return Single Course
  * @params int courseId

@@ -162,9 +162,33 @@ module.exports.assignCourse = async (studentid, courseid) => {
         user_id: studentid,
       },
     });
+    student.addCourse(courseId);
+    var getCourseDetails = await db.CourseRegistration.findOne({
+      where: {
+        courseId: courseid,
+      },
+    });
+    const seats = getCourseDetails.seats;
+    const changeSeatCount = seats - 1;
+    const data = { seats: changeSeatCount };
+    var updateCourseSeats = await db.CourseRegistration.update(data, {
+      where: {
+        courseId: courseid,
+      },
+    });
   } catch (err) {
     console.log(err);
   }
-  student.addCourse(courseId);
   return true;
+};
+
+module.exports.getAllStudents = async () => {
+  try {
+    var students = await db.Students.findAll({
+      include: db.User,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  return students;
 };

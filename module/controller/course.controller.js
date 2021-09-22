@@ -160,3 +160,12 @@ module.exports.courseStudent = async (req, res) => {
   }
   return;
 };
+
+module.exports.getAllCourses = async (req, res) => {
+  try {
+    var courses = await courseModel.genAllCourses();
+    res.send({ courses: courses });
+  } catch (error) {
+    res.send({ err: error });
+  }
+};

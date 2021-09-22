@@ -3,11 +3,11 @@ const { findSingleUser } = require("../../models/modelFunc/user.func");
 module.exports.grantAccess = (roles) => {
   return (auth = (req, res, next) => {
     // For PostMan
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
+    // const authHeader = req.headers["authorization"];
+    // const token = authHeader && authHeader.split(" ")[1];
     // // console.log(token)
     // For UI
-    // const token = req.headers["authorization"];
+    const token = req.headers["authorization"];
     if (!token) return res.send({ status: false, err: "Unable to access it" });
     try {
       const verified = jwt.verify(token, process.env.TOKEN_SECRET_KEY);

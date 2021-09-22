@@ -60,7 +60,7 @@ module.exports.updateRole = async (req, res) => {
 
 module.exports.singleRole = async (req, res) => {
   try {
-    let role = await roleModel.singleRole(req.params.roleId);
+    let role = await roleModel.singleRole(req.params.roleName);
     res.send({ status: true, role: role });
   } catch (error) {
     res.send({ status: false, err: error });
